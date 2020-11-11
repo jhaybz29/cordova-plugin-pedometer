@@ -153,7 +153,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
                 this.setStatus(PedoListener.STARTING);
             } else {
                 this.setStatus(PedoListener.ERROR_FAILED_TO_START);
-                this.fail(PedoListener.ERROR_FAILED_TO_START, "Device sensor returned an error.");
+                this.fail(PedoListener.ERROR_FAILED_TO_START, "Device sensor returned an error. (Using Step Detector)");
                 return;
             };
         } else {
