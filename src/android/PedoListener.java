@@ -144,7 +144,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
         this.setStatus(PedoListener.STARTING);
 
         // Get pedometer from sensor manager
-        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_COUNTER);
+        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_DETECTOR);
 
         // If found, then register as listener
         if ((list != null) && (list.size() > 0)) {
