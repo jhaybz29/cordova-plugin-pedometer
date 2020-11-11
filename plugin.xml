@@ -28,6 +28,9 @@
             <feature name="Pedometer">
                 <param name="android-package" value="org.apache.cordova.pedometer.PedoListener" />
             </feature>
+            
+            <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+            
         </config-file>
         <source-file src="src/android/PedoListener.java" target-dir="src/org/apache/cordova/pedometer" />
     </platform>
