@@ -1,17 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-pedometer" version="0.4.1">
+
+
     <name>Core Motion Pedometer</name>
     <author>Lee Crossley (http://ilee.co.uk/)</author>
     <description>Cordova / PhoneGap Plugin for the Core Motion Pedometer to fetch pedestrian-related data,
         such as step counts and other information about the distance travelled.</description>
     <keywords>cordova, core motion, pedometer, steps, distance, pedestrian</keywords>
     <license>MIT</license>
+	
+	
     <engines>
         <engine name="cordova" version=">=3.0.0" />
     </engines>
+	
+	
     <js-module src="www/pedometer.js" name="Pedometer">
         <clobbers target="pedometer" />
     </js-module>
+	
+	
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
             <feature name="Pedometer">
@@ -23,15 +31,69 @@
         <source-file src="src/ios/Pedometer.m" />
         <framework src="CoreMotion.framework" />
     </platform>
+	
+	
     <platform name="android">
+	
+		<config-file target="AndroidManifest.xml" parent="/manifest/application">
+		
+		
+            <receiver android:name="org.apache.cordova.stepper.BootReceiver">
+                <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <category android:name="android.intent.category.DEFAULT" />
+                </intent-filter>
+            </receiver>
+			
+			
+            <receiver android:name="org.apache.cordova.stepper.AppUpdatedReceiver">
+                <intent-filter>
+                    <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                </intent-filter>
+            </receiver>
+            <service android:name="org.apache.cordova.stepper.SensorListener"/>
+			
+			
+			
+        </config-file>
+	
+		<config-file target="AndroidManifest.xml" parent="/manifest">
+		
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+            <uses-permission android:name="android.permission.WAKE_LOCK" />
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+			<uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+            <uses-feature android:name="android.hardware.sensor.stepcounter" />
+			
+        </config-file>
+	
+	
         <config-file target="res/xml/config.xml" parent="/*">
+		
+		
             <feature name="Pedometer">
                 <param name="android-package" value="org.apache.cordova.pedometer.PedoListener" />
             </feature>
             
-            <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-            
+			
         </config-file>
-        <source-file src="src/android/PedoListener.java" target-dir="src/org/apache/cordova/pedometer" />
+        
+		
+		<source-file src="src/android/PedoListener.java" target-dir="src/org/apache/cordova/pedometer" />
+		
+		
     </platform>
+	
+	
 </plugin>
+
+
+
+
+
+
+
+
