@@ -25,7 +25,8 @@ import android.os.Handler;
 /**
  * This class listens to the pedometer sensor
  */
-public class PedoListener extends CordovaPlugin implements SensorEventListener {
+public class PedoListener extends CordovaPlugin 
+{
 
     public static int STOPPED 					= 0;
     public static int STARTING 					= 1;
@@ -43,6 +44,42 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     private CallbackContext callbackContext; 	// Keeps track of the JS callback context.
 
     private Handler mainHandler					= null;
+	
+	//Manually creating a listener event
+	private SensorEventListener mStepEventListener = new SensorEventListener()
+	{
+		 /**
+		 * Called when the accuracy of the sensor has changed.
+		 */
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) 
+		{
+		  //nothing to do here
+		  return;
+		}
+
+		/**
+		 * Sensor listener event.
+		 * @param event
+		 */
+		@Override
+		public void onSensorChanged(SensorEvent event) 
+		{
+			
+			if (this.status == PedoListener.STOPPED) 
+			{
+				return;
+			}
+			
+			if(event.sensor == mStepSensor)
+			{
+				this.setStatus(PedoListener.RUNNING);
+				
+				int steps = (int) event.values[0];
+				this.win(this.getStepsJSON(steps));
+			}
+		}
+	};
 
     /**
      * Constructor
@@ -65,7 +102,16 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) 
 	{
         super.initialize(cordova, webView);
-        mSensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
+        
+    }
+
+	/**
+     * Called when the activity is becoming visible to the user.
+     */
+	@Override
+    public void onStart() 
+	{
+		mSensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
     }
 
     /**
@@ -170,7 +216,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 		if(mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
 		{
 			mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-			boolean IsListening = mSensorManager.registerListener(this, mStepSensor, SensorManager.SENSOR_DELAY_NORMAL);
+			boolean IsListening = mSensorManager.registerListener(mStepEventListener, mStepSensor, SensorManager.SENSOR_DELAY_NORMAL);
 			if(IsListening == true)
 			{
 				this.setStatus(PedoListener.STARTING);
@@ -200,68 +246,11 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
 		{
 			if(mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
 			{
-				mSensorManager.unregisterListener(this);
+				mSensorManager.unregisterListener(mStepEventListener);
 			}
         }
 		
         this.setStatus(PedoListener.STOPPED);
-    }
-
-    /**
-     * Called when the accuracy of the sensor has changed.
-     */
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) 
-	{
-      //nothing to do here
-      return;
-    }
-
-    /**
-     * Sensor listener event.
-     * @param event
-     */
-    @Override
-    public void onSensorChanged(SensorEvent event) 
-	{
-		
-		if (this.status == PedoListener.STOPPED) 
-		{
-            return;
-        }
-		
-		if(event.sensor == mStepSensor)
-		{
-			this.setStatus(PedoListener.RUNNING);
-			
-			int steps = (int) event.values[0];
-			this.win(this.getStepsJSON(steps));
-		}
-		
-        // Only look at step counter events
-        /*if (event.sensor.getType() != Sensor.TYPE_STEP_COUNTER) 
-		{
-            return;
-        }
-
-        // If not running, then just return
-        if (this.status == PedoListener.STOPPED) 
-		{
-            return;
-        }
-		
-        this.setStatus(PedoListener.RUNNING);
-
-        float steps = event.values[0];
-
-        if(this.startsteps == 0)
-		{
-			this.startsteps = steps;
-		}
-
-        steps = steps - this.startsteps;
-
-        this.win(this.getStepsJSON(steps));*/
     }
 
     /**
