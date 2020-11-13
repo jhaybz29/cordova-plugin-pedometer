@@ -66,17 +66,17 @@ public class PedoListener extends CordovaPlugin
 		public void onSensorChanged(SensorEvent event) 
 		{
 			
-			if (this.status == PedoListener.STOPPED) 
+			if (status == PedoListener.STOPPED) 
 			{
 				return;
 			}
 			
 			if(event.sensor == mStepSensor)
 			{
-				this.setStatus(PedoListener.RUNNING);
+				setStatus(PedoListener.RUNNING);
 				
 				int steps = (int) event.values[0];
-				this.win(this.getStepsJSON(steps));
+				win(getStepsJSON(steps));
 			}
 		}
 	};
@@ -285,7 +285,7 @@ public class PedoListener extends CordovaPlugin
         callbackContext.sendPluginResult(err);
     }
 
-    private void win(JSONObject message) 
+    public void win(JSONObject message) 
 	{
         // Success return object
         PluginResult result;
@@ -302,7 +302,7 @@ public class PedoListener extends CordovaPlugin
         callbackContext.sendPluginResult(result);
     }
 
-    private void win(boolean success) 
+    public void win(boolean success) 
 	{
         // Success return object
         PluginResult result;
@@ -312,12 +312,12 @@ public class PedoListener extends CordovaPlugin
         callbackContext.sendPluginResult(result);
     }
 
-    private void setStatus(int status) 
+    public void setStatus(int status) 
 	{
         this.status = status;
     }
 
-    private JSONObject getStepsJSON(int steps) 
+    public JSONObject getStepsJSON(int steps) 
 	{
         JSONObject r = new JSONObject();
         // pedometerData.startDate; -> ms since 1970
