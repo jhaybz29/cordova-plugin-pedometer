@@ -133,9 +133,11 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
     /**
      * Start listening for pedometers sensor.
      */
-    private void start() {
+    private void start() 
+	{
         // If already starting or running, then return
-        if ((this.status == PedoListener.RUNNING) || (this.status == PedoListener.STARTING)) {
+        if ((this.status == PedoListener.RUNNING) || (this.status == PedoListener.STARTING)) 
+		{
             return;
         }
 
@@ -147,16 +149,24 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
         List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_DETECTOR);
 
         // If found, then register as listener
-        if ((list != null) && (list.size() > 0)) {
-            this.mSensor = list.get(0);
-            if (this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_UI)) {
+        if ((list != null) && (list.size() > 0)) 
+		{
+            //this.mSensor = list.get(0);
+			this.mSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (this.sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0)) 
+			{
                 this.setStatus(PedoListener.STARTING);
-            } else {
+            } 
+			else
+			{
                 this.setStatus(PedoListener.ERROR_FAILED_TO_START);
-                this.fail(PedoListener.ERROR_FAILED_TO_START, "Device sensor returned an error. (Using Step Detector)");
+                this.fail(PedoListener.ERROR_FAILED_TO_START, "Device sensor returned an error. (Using Default Step Detector)");
                 return;
             };
-        } else {
+			
+        } 
+		else 
+		{
             this.setStatus(PedoListener.ERROR_FAILED_TO_START);
             this.fail(PedoListener.ERROR_FAILED_TO_START, "No sensors found to register step counter listening to.");
             return;
