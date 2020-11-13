@@ -102,6 +102,7 @@ public class PedoListener extends CordovaPlugin
     public void initialize(CordovaInterface cordova, CordovaWebView webView) 
 	{
         super.initialize(cordova, webView);
+		mSensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
         
     }
 
@@ -111,7 +112,7 @@ public class PedoListener extends CordovaPlugin
 	@Override
     public void onStart() 
 	{
-		mSensorManager = (SensorManager) cordova.getActivity().getSystemService(Context.SENSOR_SERVICE);
+		
     }
 
     /**
