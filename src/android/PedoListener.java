@@ -145,11 +145,25 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
         this.startsteps = 0;
         this.setStatus(PedoListener.STARTING);
 
+		this.mSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+		if(this.mSensor != null)
+		{
+			//Removed the false checker and jump straight to listener assignment
+			this.sensorManager.registerListener(this, this.mSensor, SensorManager.SENSOR_DELAY_UI, 0);
+			this.setStatus(PedoListener.STARTING);
+		}
+		else
+		{
+			this.setStatus(PedoListener.ERROR_FAILED_TO_START);
+            this.fail(PedoListener.ERROR_FAILED_TO_START, "No sensors found to register step counter listening to.");
+            return;
+		}
+
         // Get pedometer from sensor manager
-        List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_DETECTOR);
+        //List<Sensor> list = this.sensorManager.getSensorList(Sensor.TYPE_STEP_COUNTER);
 
         // If found, then register as listener
-        if ((list != null) && (list.size() > 0)) 
+        /*if ((list != null) && (list.size() > 0)) 
 		{
             //this.mSensor = list.get(0);
 			this.mSensor = this.sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -171,7 +185,7 @@ public class PedoListener extends CordovaPlugin implements SensorEventListener {
             this.setStatus(PedoListener.ERROR_FAILED_TO_START);
             this.fail(PedoListener.ERROR_FAILED_TO_START, "No sensors found to register step counter listening to.");
             return;
-        }
+        }*/
     }
 
     /**
