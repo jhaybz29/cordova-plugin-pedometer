@@ -327,6 +327,8 @@ public class PedoListener extends CordovaPlugin
         // pedometerData.distance;
         // pedometerData.floorsAscended;
         // pedometerData.floorsDescended;
+		
+		//Added a comment
         try 
 		{
             r.put("startDate", this.starttimestamp);
